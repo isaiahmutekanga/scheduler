@@ -65,6 +65,10 @@ const appointments = [
 export default function Application(props) {
   const [day, setDay] = useState("Monday");
 
+  const schedule = appointments.map((appointment) => {
+    return <Appointment key={appointment.id} {...appointment} />;
+  });
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -83,9 +87,7 @@ export default function Application(props) {
           alt="Lighthouse Labs"
         />
       </section>
-      <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
-      </section>
+      <section className="schedule">{schedule}</section>
     </main>
   );
 }
