@@ -5,13 +5,13 @@ import classNames from "classnames";
 import DayListItem from "components/DayListItem.js";
 
 export default function DayList(props) {
-  const listItems = props.days.map((x, i) => (
+  const listItems = props.days.map((days) => (
     <DayListItem
-      key={props.days[i].id}
-      name={props.days[i].name}
-      spots={props.days[i].spots}
-      selected={props.days[i].name === props.value}
-      setDay={props.onChange}
+      key={days.id}
+      name={days.name}
+      spots={days.spots}
+      selected={days.name === props.value}
+      setDay={() => props.onChange}
     />
   ));
   return <ul>{listItems}</ul>;
