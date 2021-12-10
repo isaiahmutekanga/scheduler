@@ -1,7 +1,6 @@
 export function getAppointmentsForDay(state, day) {
   let daysarr = state.days;
   let appsarray = [];
-  let wrong = "";
 
   for (let i = 0; i < daysarr.length; i++) {
     if (daysarr[i].name === day) {
@@ -12,6 +11,21 @@ export function getAppointmentsForDay(state, day) {
   }
 
   return appsarray;
+}
+
+export function getInterviewersForDay(state, day) {
+  let daysarr = state.days;
+  let intarray = [];
+
+  for (let i = 0; i < daysarr.length; i++) {
+    if (daysarr[i].name === day) {
+      daysarr[i].appointments.forEach((element) => {
+        intarray.push(state.interviewers[element]);
+      });
+    }
+  }
+
+  return intarray;
 }
 
 export function getInterview(state, interview) {
