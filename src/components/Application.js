@@ -14,7 +14,7 @@ import {
 
 export default function Application(props) {
   const setDay = (day) => setState({ ...state, day });
-  // const setDays = (days) => setState((prev) => ({ ...prev, days }));
+
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -24,6 +24,42 @@ export default function Application(props) {
   const AppointmentArray = [];
   for (const key in dailyAppointments[0]) {
     AppointmentArray.push(dailyAppointments[0][key]);
+  }
+
+  async function bookInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    await axios.put(`/api/appointments/${id}`, { interview });
+    setState({
+      ...state,
+      appointments,
+    });
+  }
+
+  async function cancelInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    await axios.delete(`/api/appointments/${id}`, { interview });
+    setState({
+      ...state,
+      appointments,
+    });
   }
 
   useEffect(() => {
@@ -54,6 +90,8 @@ export default function Application(props) {
         time={appointment.time}
         interview={interview}
         interviewers={interviewersForDay}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
