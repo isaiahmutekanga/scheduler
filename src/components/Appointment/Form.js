@@ -1,13 +1,13 @@
 import React from "react";
 import InterviewerList from "components/InterviewerList";
-import InterviewerListItem from "components/InterviewerListItem";
 import Button from "components/Button";
 import { useState } from "react";
-import { action } from "@storybook/addon-actions/dist/preview";
 
 export default function Form(props) {
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
+  const [error, setError] = useState("");
+
   const reset = function () {
     setStudent("");
     setInterviewer(null);
@@ -17,19 +17,31 @@ export default function Form(props) {
     props.onCancel();
   };
 
+  function validate() {
+    if (student === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+    setError("");
+    props.onSave(student, interviewer);
+  }
+  console.log("triggered", props);
+
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
         <form autoComplete="off" onSubmit={(event) => event.preventDefault()}>
           <input
             className="appointment__create-input text--semi-bold"
-            name="student name"
+            name="student-name-input"
             type="text"
             placeholder="Enter Student Name"
             onChange={(event) => setStudent(event.target.value)}
             value={student}
+            data-testid="student-name-input"
           />
         </form>
+        <section className="appointment__validation">{error}</section>
         <InterviewerList
           value={interviewer}
           interviewers={props.interviewers}
@@ -41,7 +53,8 @@ export default function Form(props) {
           <Button danger onClick={cancel}>
             Cancel
           </Button>
-          <Button confirm onClick={() => props.onSave(student, interviewer)}>
+          {/* <Button confirm onClick={() => props.onSave(student, interviewer)}> */}
+          <Button confirm onClick={() => validate()}>
             Save
           </Button>
         </section>

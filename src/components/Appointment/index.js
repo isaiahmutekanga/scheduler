@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "components/Appointment/style.scss";
-import { getInterviewersForDay } from "helpers/selectors.js";
 import Header from "./Header.js";
 import Show from "./Show.js";
 import Empty from "./Empty.js";
@@ -8,6 +7,7 @@ import useVisualMode from "hooks/useVisualMode.js";
 import Form from "./Form.js";
 import Status from "./Status.js";
 import Confirm from "./Confirm.js";
+import Error from "./Error.js";
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
@@ -51,6 +51,7 @@ export default function Appointment(props) {
         transition(ERROR_DELETE, true);
       });
   }
+
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -83,6 +84,8 @@ export default function Appointment(props) {
       )}
       {mode === SAVING && <Status message="saving please wait" />}
       {mode === DELETING && <Status message="DELETING please wait" />}
+      {mode === ERROR_SAVE && <Error message={"Error occured"} />}
+      {mode === ERROR_DELETE && <Error message={"Error occured"} />}
     </article>
   );
 }

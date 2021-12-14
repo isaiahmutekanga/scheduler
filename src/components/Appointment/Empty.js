@@ -1,5 +1,8 @@
 import React from "react";
+
 export default function Empty(props) {
+  console.log("TRIGGERED");
+
   return (
     <main className="appointment__add">
       <img

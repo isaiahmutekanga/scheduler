@@ -5,8 +5,8 @@ import classNames from "classnames";
 export default function DayListItem(props) {
   const dayClass = classNames("li", {
     "day-list__item ": true,
-    "day-list__item--selected": props.selected ? true : false,
-    "day-list__item--full": props.spots ? false : true,
+    "day-list__item--selected": props.selected,
+    "day-list__item--full": props.spots === 0,
   });
 
   const formatSpots = () => {
