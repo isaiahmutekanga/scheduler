@@ -14,6 +14,10 @@ const CREATE = "CREATE";
 const SAVING = "SAVING";
 const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
+const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
+
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -25,7 +29,12 @@ export default function Appointment(props) {
     };
 
     transition(SAVING);
-    props.bookInterview(props.id, interview).then(() => transition(SHOW));
+    props
+      .bookInterview(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch((error) => {
+        transition(ERROR_SAVE, true);
+      });
   }
 
   function deleteInterview() {
@@ -34,8 +43,13 @@ export default function Appointment(props) {
       interviewer: null,
     };
 
-    transition(DELETING);
-    props.cancelInterview(props.id, interview).then(() => transition(EMPTY));
+    transition(DELETING, true);
+    props
+      .cancelInterview(props.id, interview)
+      .then(() => transition(EMPTY))
+      .catch((error) => {
+        transition(ERROR_DELETE, true);
+      });
   }
   return (
     <article className="appointment">
@@ -45,8 +59,8 @@ export default function Appointment(props) {
           key={props.id}
           interviewer={props.interview.interviewer}
           student={props.interview.student}
-          //onDelete={deleteInterview}
           onDelete={() => transition(CONFIRM)}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CONFIRM && <Confirm onConfirm={deleteInterview} />}
@@ -56,6 +70,15 @@ export default function Appointment(props) {
           interviewers={props.interviewers}
           onCancel={() => back(EMPTY)}
           onSave={save}
+        />
+      )}
+      {mode === EDIT && (
+        <Form
+          interviewers={props.interviewers}
+          onCancel={() => back(EMPTY)}
+          onSave={save}
+          student={props.interview.student}
+          interviewer={props.interview.interviewer.id}
         />
       )}
       {mode === SAVING && <Status message="saving please wait" />}
