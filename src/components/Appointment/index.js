@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "components/Appointment/style.scss";
 import Header from "./Header.js";
 import Show from "./Show.js";

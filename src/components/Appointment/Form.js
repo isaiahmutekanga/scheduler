@@ -29,7 +29,6 @@ export default function Form(props) {
     setError("");
     props.onSave(student, interviewer);
   }
-  console.log("triggered", props);
 
   return (
     <main className="appointment__card appointment__card--create">
