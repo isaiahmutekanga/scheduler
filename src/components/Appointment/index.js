@@ -64,7 +64,9 @@ export default function Appointment(props) {
           onEdit={() => transition(EDIT)}
         />
       )}
-      {mode === CONFIRM && <Confirm onConfirm={deleteInterview} />}
+      {mode === CONFIRM && (
+        <Confirm onConfirm={deleteInterview} onCancel={back} />
+      )}
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === CREATE && (
         <Form
@@ -84,8 +86,12 @@ export default function Appointment(props) {
       )}
       {mode === SAVING && <Status message="saving please wait" />}
       {mode === DELETING && <Status message="DELETING please wait" />}
-      {mode === ERROR_SAVE && <Error message={"Error occured"} />}
-      {mode === ERROR_DELETE && <Error message={"Error occured"} />}
+      {mode === ERROR_SAVE && (
+        <Error message={"Sorry an error occured"} onClose={back} />
+      )}
+      {mode === ERROR_DELETE && (
+        <Error message={"Error occured"} onClose={back} />
+      )}
     </article>
   );
 }
