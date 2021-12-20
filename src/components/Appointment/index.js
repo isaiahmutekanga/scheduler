@@ -80,7 +80,7 @@ export default function Appointment(props) {
       {mode === EDIT && (
         <Form
           interviewers={props.interviewers}
-          onCancel={back}
+          onCancel={() => transition(SHOW)}
           onSave={save}
           student={props.interview.student}
           interviewer={props.interview.interviewer.id}
@@ -89,7 +89,10 @@ export default function Appointment(props) {
       {mode === SAVING && <Status message="saving please wait" />}
       {mode === DELETING && <Status message="DELETING please wait" />}
       {mode === ERROR_SAVE && (
-        <Error message={"Error saving appointment"} onClose={() => back()} />
+        <Error
+          message={"Error saving appointment"}
+          onClose={() => transition(EDIT)}
+        />
       )}
       {mode === ERROR_DELETE && (
         <Error message={"Error deleting appointment"} onClose={back} />
