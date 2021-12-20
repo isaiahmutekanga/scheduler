@@ -39,23 +39,38 @@ export default function useApplicationData(props) {
     return daysCopy;
   };
 
-  async function bookInterview(id, interview) {
+  async function bookInterview(id, interview, editing, setEditing) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
     };
+
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    await axios.put(`/api/appointments/${id}`, { interview }).then(() => {
-      setState({
-        ...state,
-        appointments,
-        days: spotUpdate(-1),
-      });
-    });
+    if (editing) {
+      return await axios
+        .put(`http://localhost:8001/api/appointments/${id}`, appointment)
+        .then((response) => {
+          setState({ ...state, appointments, days: spotUpdate(0) });
+
+          setEditing(false);
+        })
+        .catch((error) => {
+          throw error;
+        });
+    } else {
+      return await axios
+        .put(`http://localhost:8001/api/appointments/${id}`, appointment)
+        .then((response) => {
+          setState({ ...state, appointments, days: spotUpdate(-1) });
+        })
+        .catch((error) => {
+          throw error;
+        });
+    }
   }
 
   async function cancelInterview(id, interview) {

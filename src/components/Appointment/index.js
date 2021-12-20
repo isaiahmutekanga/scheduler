@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "components/Appointment/style.scss";
 import Header from "./Header.js";
 import Show from "./Show.js";
@@ -22,6 +22,7 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
+  const [editing, setEditing] = useState(false);
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -30,7 +31,7 @@ export default function Appointment(props) {
 
     transition(SAVING);
     props
-      .bookInterview(props.id, interview)
+      .bookInterview(props.id, interview, editing, setEditing)
       .then(() => transition(SHOW))
       .catch((error) => {
         transition(ERROR_SAVE, true);
@@ -61,7 +62,12 @@ export default function Appointment(props) {
           interviewer={props.interview.interviewer}
           student={props.interview.student}
           onDelete={() => transition(CONFIRM)}
-          onEdit={() => transition(EDIT)}
+          onEdit={() => {
+            transition(EDIT);
+            setEditing(true);
+          }}
+          editing={editing}
+          setEditing={setEditing}
         />
       )}
       {mode === CONFIRM && (
@@ -69,16 +75,12 @@ export default function Appointment(props) {
       )}
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === CREATE && (
-        <Form
-          interviewers={props.interviewers}
-          onCancel={() => back(EMPTY)}
-          onSave={save}
-        />
+        <Form interviewers={props.interviewers} onCancel={back} onSave={save} />
       )}
       {mode === EDIT && (
         <Form
           interviewers={props.interviewers}
-          onCancel={() => back(EMPTY)}
+          onCancel={back}
           onSave={save}
           student={props.interview.student}
           interviewer={props.interview.interviewer.id}
@@ -87,10 +89,10 @@ export default function Appointment(props) {
       {mode === SAVING && <Status message="saving please wait" />}
       {mode === DELETING && <Status message="DELETING please wait" />}
       {mode === ERROR_SAVE && (
-        <Error message={"Sorry an error occured"} onClose={back} />
+        <Error message={"Error saving appointment"} onClose={() => back()} />
       )}
       {mode === ERROR_DELETE && (
-        <Error message={"Error occured"} onClose={back} />
+        <Error message={"Error deleting appointment"} onClose={back} />
       )}
     </article>
   );
